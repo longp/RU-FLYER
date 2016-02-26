@@ -15,8 +15,6 @@ app.use("/js", express.static("public/js"));
 app.use("/css", express.static("public/css"));s
 
 
-
-
 app.get("/", function (req, res) {
   res.render("home");
 });
@@ -26,13 +24,31 @@ app.get("/login", function (req, res) {
 });
 
 
+//database setup
+var Sequelize = require('sequelize');
+var connection = new Sequelize('users', 'root', '', {
+  dialect: 'mysql',
+  port: 3306,
+  host: 'localhost'
+});
 
+var user = connection.define('user', {
+  username: Sequelize.STRING,
+  password: Sequelize.STRING,
+  firstName: Sequelize.STRING,
+  lastName: Sequelize.STRING,
+  email: Sequelize.STRING
+}), {
+  hooks: {
+    beforeCreate :function (argument) {
 
+    }
+  }
+}
 
-
-app.listen(PORT, function (req, res) {
-  console.log("listen on port %s", PORT);
-})
-
-
-
+// database connection via sequelize
+connection.sync().then(function() {
+  app.listen(PORT, function() {
+      console.log("Listening on:" + PORT)
+  });
+});
