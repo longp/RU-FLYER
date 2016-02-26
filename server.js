@@ -6,7 +6,7 @@ var session = require('express-session');
 var bcrypt = require("bcryptjs");
 var passport = require('passport');
 var passportLocal = require('passport-local');
-const PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3000;
 var app = express();
 
 // body parser setup
@@ -20,11 +20,11 @@ app.engine('handlebars', exphbs({
 }));
 app.set("view engine", 'handlebars');
 
-// simplify routing
+//static routes for js and css
 app.use("/js", express.static("public/js"));
 app.use("/css", express.static("public/css"));
 
-// routes
+//routes for handlebars render
 app.get("/", function (req, res) {
   res.render("home");
 });
@@ -45,27 +45,58 @@ app.post('/register', function (req, res) {
 });
 
 //database setup
-var Sequelize = require('sequelize');
 var connection = new Sequelize('users', 'root', '', {
   dialect: 'mysql',
   port: 3306,
   host: 'localhost'
 });
 
-var user = connection.define('users', {
+var user = connection.define('user', {
   username: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
-  },
-  password: {
-    type: Sequelize.STRING,
     allowNull: false,
-  },
-  firstName: Sequelize.STRING,
-  lastName: Sequelize.STRING,
-  email: Sequelize.STRING
-}, {
+    validate : {
+      notEmpty:true,
+      isAlphanumeric: true
+      }
+    },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate : {
+        notEmpty: true,
+        len: {
+          args:[8, 20],
+          msg: "Password must be 8-20 characters long"
+        }
+      }
+    },
+    firstName: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate : {
+        notEmpty: true,
+        is: ["^[a-z]+$", 'i']
+      }
+    },
+    lastName: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate : {
+        notEmpty: true,
+        is: ["^[a-z]+$", 'i']
+      }
+    },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate : {
+        isEmail: true
+      }
+    }
+},
+  {
   hooks: {
     beforeCreate: function(input){
       input.password = bcrypt.hashSync(input.password, 10);
