@@ -3,7 +3,7 @@ var exphbs = require("express-handlebars");
 var Sequelize = require("sequelize");
 var bodyParser = require("body-parser");
 var session = require('express-session');
-const PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3000;
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main'
