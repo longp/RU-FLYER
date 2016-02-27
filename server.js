@@ -9,10 +9,16 @@ var passportLocal = require('passport-local');
 var PORT = process.env.PORT || 3000;
 var app = express();
 
-// body parser setup
-app.use(bodyParser.urlencoded({
-    extended: false
+// middleware setup
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({
+  secret: 'keyboard cat rocks',
+  resave: true,
+  saveUninitialized: true,
+  cookie : { secure : false, maxAge : (1 * 60 * 60 * 1000) } // 1 hours
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //handlebars setup
 app.engine('handlebars', exphbs({
@@ -35,14 +41,62 @@ app.get("/login", function (req, res) {
 
 app.post('/register', function (req, res) {
   console.log(req.body);
-  user.create({
+  User.create({
     username: req.body.username,
     password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email
   });
+  res.send("user created!!!!");
 });
+
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/user');
+  }
+);
+
+// passport auth strategy
+passport.use(new passportLocal.Strategy(
+  function(username, password, done) {
+    User.findOne({
+      where: {
+        username: username
+      }
+    }).then(function (user) {
+      if (user) {
+        bcrypt.compareSync(password, user.dataValues.password, function (err, user) {
+          if (user) {
+            done(null, { id: username, username: username });
+          } else {
+            done(null, null);
+          }
+        });
+      } else {
+        done(null, null);
+      }
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+passport.deserializeUser(function(id, done) {
+    done(null, { id: id, username: id })
+});
+
+// hashin
+function hashPass (password) {
+  console.log("we got here");
+  bcrypt.genSalt(10, function(err, salt) {
+      bcrypt.hash(password, salt, function(err, hash) {
+          return hash;
+      });
+  });
+}
 
 //database setup
 var connection = new Sequelize('users', 'root', '', {
@@ -51,7 +105,7 @@ var connection = new Sequelize('users', 'root', '', {
   host: 'localhost'
 });
 
-var user = connection.define('user', {
+var User = connection.define('user', {
   username: {
     type: Sequelize.STRING,
     unique: true,
@@ -59,50 +113,53 @@ var user = connection.define('user', {
     validate : {
       notEmpty:true,
       isAlphanumeric: true
-      }
-    },
-    password: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate : {
-        notEmpty: true,
-        len: {
-          args:[8, 20],
-          msg: "Password must be 8-20 characters long"
-        }
-      }
-    },
-    firstName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate : {
-        notEmpty: true,
-        is: ["^[a-z]+$", 'i']
-      }
-    },
-    lastName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate : {
-        notEmpty: true,
-        is: ["^[a-z]+$", 'i']
-      }
-    },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate : {
-        isEmail: true
+    }
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true,
+      len: {
+        args:[8, 20],
+        msg: "Password must be 8-20 characters long"
       }
     }
+  },
+  firstName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true,
+      is: ["^[a-z]+$", 'i']
+    }
+  },
+  lastName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true,
+      is: ["^[a-z]+$", 'i']
+    }
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      isEmail: true
+    }
+  }
 },
   {
   hooks: {
     beforeCreate: function(input){
-      input.password = bcrypt.hashSync(input.password, 10);
+      console.log("maybe we got here?");
+      input.password = hashPass(input.password);
     }
   }
 });
+
+User.sync();
 
 // database connection via sequelize
 connection.sync().then(function() {
