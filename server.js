@@ -3,8 +3,17 @@ var exphbs = require("express-handlebars");
 var Sequelize = require("sequelize");
 var bodyParser = require("body-parser");
 var session = require('express-session');
+var bcrypt = require("bcryptjs");
+var passport = require('passport');
+var passportLocal = require('passport-local');
 var PORT = process.env.PORT || 3000;
-var app =express();
+var app = express();
+
+// body parser setup
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+
 //handlebars setup
 app.engine('handlebars', exphbs({
   defaultLayout: 'main'
@@ -24,6 +33,16 @@ app.get("/login", function (req, res) {
   res.render("login");
 });
 
+app.post('/register', function (req, res) {
+  console.log(req.body);
+  user.create({
+    username: req.body.username,
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email
+  });
+});
 
 //database setup
 var connection = new Sequelize('users', 'root', '', {
@@ -32,8 +51,7 @@ var connection = new Sequelize('users', 'root', '', {
   host: 'localhost'
 });
 
-
-var User = connection.define('user', {
+var user = connection.define('user', {
   username: {
     type: Sequelize.STRING,
     unique: true,
@@ -80,8 +98,8 @@ var User = connection.define('user', {
 },
   {
   hooks: {
-    beforeCreate :function (argument) {
-
+    beforeCreate: function(input){
+      input.password = bcrypt.hashSync(input.password, 10);
     }
   }
 });
