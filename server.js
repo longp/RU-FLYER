@@ -35,16 +35,16 @@ app.get("/login", function (req, res) {
 
 app.post('/register', function (req, res) {
   console.log(req.body);
-  // user.create({
-  //   username: req.body.username,
-  //   password: req.body.password,
-  //   firstName: req.body.firstName,
-  //   lastName: req.body.lastName,
-  //   email: req.body.email
+  // // user.create({
+  // //   username: req.body.username,
+  // //   password: req.body.password,
+  // //   firstName: req.body.firstName,
+  // //   lastName: req.body.lastName,
+  // //   email: req.body.email
   // });
 });
 
-// //database setup
+//database setup
 // var connection = new Sequelize('users', 'root', '', {
 //   dialect: 'mysql',
 //   port: 3306,
