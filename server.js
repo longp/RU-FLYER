@@ -1,6 +1,6 @@
 var express = require("express");
 var exphbs = require("express-handlebars");
-var Sequelize = require("sequelize");
+// var Sequelize = require("sequelize");
 var bodyParser = require("body-parser");
 var session = require('express-session');
 var bcrypt = require("bcryptjs");
