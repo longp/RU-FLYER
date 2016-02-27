@@ -35,13 +35,13 @@ app.get("/login", function (req, res) {
 
 app.post('/register', function (req, res) {
   console.log(req.body);
-  user.create({
-    username: req.body.username,
-    password: req.body.password,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email
-  });
+  // user.create({
+  //   username: req.body.username,
+  //   password: req.body.password,
+  //   firstName: req.body.firstName,
+  //   lastName: req.body.lastName,
+  //   email: req.body.email
+  // });
 });
 
 // //database setup
@@ -105,8 +105,13 @@ app.post('/register', function (req, res) {
 // });
 
 // database connection via sequelize
-connection.sync().then(function() {
-  app.listen(PORT, function() {
+// connection.sync().then(function() {
+//   app.listen(PORT, function() {
+//       console.log("Listening on:" + PORT)
+//   });
+// });
+
+ app.listen(PORT, function() {
       console.log("Listening on:" + PORT)
   });
-});
+
