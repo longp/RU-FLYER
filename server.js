@@ -157,8 +157,8 @@ app.post('/login', passport.authenticate('local', {
 // syncing table if none is created already
 User.sync();
 
-// app listen setup
-database connection via sequelize
+
+// database connection via sequelize + port listening
 connection.sync().then(function() {
   app.listen(PORT, function() {
       console.log("Listening on:" + PORT)
