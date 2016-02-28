@@ -40,14 +40,20 @@ app.get("/login", function (req, res) {
 });
 
 app.post('/register', function (req, res) {
-  console.log(req.body);
-  User.create({
-    username: req.body.username,
-    password: req.body.password,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email
+  // console.log(req.body);
+  User.create(req.body).then(function(result){
+    // res.redirect('/?msg=Account created');
+  }).catch(function(err) {
+    console.log(err);
+    // res.redirect('/?msg=' + err.errors[0].message);
   });
+  // User.create({
+  //   username: req.body.username,
+  //   password: req.body.password,
+  //   firstName: req.body.firstName,
+  //   lastName: req.body.lastName,
+  //   email: req.body.email
+  // });
   res.send("user created!!!!");
 });
 
@@ -88,15 +94,14 @@ passport.deserializeUser(function(id, done) {
     done(null, { id: id, username: id })
 });
 
-// hashin
-function hashPass (password) {
-  console.log("we got here");
-  bcrypt.genSalt(10, function(err, salt) {
-      bcrypt.hash(password, salt, function(err, hash) {
-          return hash;
-      });
-  });
-}
+// hashin (not working with this atm)
+// function hashPass (password) {
+//   bcrypt.genSalt(10, function(err, salt) {
+//       bcrypt.hash(password, salt, function(err, hash) {
+//           return hash;
+//       });
+//   });
+// }
 
 //database setup
 var connection = new Sequelize('users', 'root', '', {
@@ -153,8 +158,11 @@ var User = connection.define('user', {
   {
   hooks: {
     beforeCreate: function(input){
-      console.log("maybe we got here?");
-      input.password = hashPass(input.password);
+      console.log("password being hashed now");
+      // input.password = hashPass(input.password);
+      console.log("inputed password is " + input.password);
+      input.password = bcrypt.hashSync(input.password, 10);
+      console.log("hashed password is " + input.password);
     }
   }
 });
