@@ -138,10 +138,6 @@ app.get("/", function (req, res) {
   }
 });
 
-// app.get("/login", function (req, res) {
-//   res.render("login");
-// });
-
 app.post('/register', function (req, res) {
   User.create(req.body).then(function(result){
     // res.redirect('/?msg=Account created');
@@ -161,8 +157,8 @@ app.post('/login', passport.authenticate('local', {
 // syncing table if none is created already
 User.sync();
 
-
-// database connection via sequelize
+// app listen setup
+database connection via sequelize
 connection.sync().then(function() {
   app.listen(PORT, function() {
       console.log("Listening on:" + PORT)
