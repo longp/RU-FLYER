@@ -130,7 +130,12 @@ var User = connection.define('user', {
 
 //routes for handlebars render
 app.get("/", function (req, res) {
-  res.render("home");
+  if (req.user) {
+    // Passport will create a req.user if the user is logged in
+    res.redirect("/user");
+  } else {
+    res.render("home");
+  }
 });
 
 // app.get("/login", function (req, res) {
