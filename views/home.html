@@ -2,7 +2,16 @@
 <html>
 <head>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
 
+<link rel="stylesheet" type="text/css" href="stylesheet.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" type="text/css" href="style/home.css">  
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
 
 
   <title></title>
@@ -11,9 +20,9 @@
 <p>Welcome to RU Flyer Homepage</p>
 
 </body>
-  <nav>
+  <nav id=nav>
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo">RU FLYER</a>
+      <a href="#" class="brand-logo">RU FLYER </a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
           <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-primary btn-lg active">
@@ -28,32 +37,51 @@
         </ul>
   </div>
 </nav>  
+<div id="carousel" class="carousel slide carousel-fade" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel" data-slide-to="1"></li>
+        <li data-target="#carousel" data-slide-to="2"></li>
+        <li data-target="#carousel" data-slide-to="3"></li>
+         <li data-target="#carousel" data-slide-to="4"></li>
+        <li data-target="#carousel" data-slide-to="5"></li>
 
-  
-<form>
-  First name:<br>
-  <input type="text" name="firstname">
-  </br>
-  Last name:<br>
-  <input type="text" name="lastname">
-  </br>
-  Email:<br>
-  <input type="text" email="email">
-  </br>
-    <button class="btn waves-effect waves-light" type="submit" name="action">Please Register
-    <i class="material-icons right">Here</i>
-  </button>
-</form>   
+    </ol>
+    <!-- Carousel items -->
+
+   
+    <div class="carousel-inner">
+        <div class="active item">
+         <img src="pics/rutgersgarden.JPG" alt="..." class="rutpix" height="900" width="1300"></div>
+        <div class="active item">
+         <img src="pics/library.jpg" alt="..." class="rutpix" height="300" width="1300"></div>
+         <div class="active item">
+         <img src="pics/cafe.jpg" alt="..." class="rutpix" height="1100" width="1300"></div>
+        <div class="item">
+          <img src="pics/truck.jpg" alt="..." class="rutpix" height="1000" width="1300"></div>
+        <div class="item">
+          <img src="pics/game.jpg" alt="..." class="rutpix" width="1300">
+        </div>
+        <div class="item">
+          <img src="pics/garden.jpg" alt="..." class="rutpix" height="1300" width="4000">
+        </div>
+
+    </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left" href="#carousel" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right" href="#carousel" data-slide="next">&rsaquo;</a>
+</div>  
+ 
 
           <footer class="page-footer">
           <div class="container">
             <div class="row">
               <div class="col l6 s12">
-                <h5 class="white-text">Footer Content</h5>
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                <h5 class="white-text">The fun begins after you register or login</h5>
+                <p class="grey-text text-lighten-4">This website is designed for students, faculty and visitors who would like to explore the Rutgers campus</p>
               </div>
               <div class="col l4 offset-l2 s12">
-                <h5 class="white-text"><img src="imagesx/rutgers-logo.gif" height="100" width="100"></h5>
+                <h5 class="white-text"></h5>
                 <ul>
                 </ul>
               </div>
@@ -62,8 +90,14 @@
           <div class="footer-copyright">
             <div class="container">
             © 2014 Copyright Text
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            <a class="grey-text text-lighten-4 right" href="#!"></a>
             </div>
           </div>
+        </footer>
+        </body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="server.js"></script>
+
 
 </html>
