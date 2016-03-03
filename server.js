@@ -1,7 +1,8 @@
 // why was this added?
 // $('.carousel').carousel();
 
-
+//require JAWSDB_URL in env file
+require('dotenv').config();
 
 var express = require("express");
 var exphbs = require("express-handlebars");
@@ -13,6 +14,7 @@ var passport = require('passport');
 var passportLocal = require('passport-local').Strategy;
 var PORT = process.env.PORT || 3000;
 var app = express();
+
 
 
 // middleware setup
@@ -37,6 +39,7 @@ app.set("view engine", 'handlebars');
 //static routes for js and css
 app.use("/js", express.static("public/js"));
 app.use("/css", express.static("public/css"));
+app.use("/pics", express.static("public/pics"));
 
 
 // passport auth strategy
@@ -73,11 +76,7 @@ passport.deserializeUser(function(id, done) {
 
 
 //database setup
-var connection = new Sequelize('users', 'root', '', {
-  dialect: 'mysql',
-  port: 3306,
-  host: 'localhost'
-});
+var connection = new Sequelize(process.env.JAWSDB_URL);
 
 var User = connection.define('user', {
   username: {
