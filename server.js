@@ -1,3 +1,6 @@
+$('.carousel').carousel();
+
+
 var express = require("express");
 var exphbs = require("express-handlebars");
 // var Sequelize = require("sequelize");
