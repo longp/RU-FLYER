@@ -171,9 +171,28 @@ var Event = connection.define('event', {
   }
 });
 
+
+var Attending = connection.define('attendance', {
+  eventId: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty:true,
+    }
+  },
+  user: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true
+    }
+  }
+});
+
 // syncing tables
 User.sync();
 Event.sync();
+Attending.sync();
 
 
 //routes
@@ -258,7 +277,24 @@ app.post("/newevent", function (req, res) {
       desc: req.body.desc,
       creator: req.user.username
     }).then(function () {
-      res.send("Event Created");
+      res.redirect("/events/?msg=You created a new event");
+    }).catch(function(err) {
+      res.redirect("/?msg=" + err.message);
+    })
+  } else {
+    res.render("home", {
+      msg: "Please Log In"
+    });
+  }
+})
+
+app.post("/attend/event/:eId", function (req, res) {
+  if (req.user) {
+    Attending.create({
+      eventId: req.params.eId,
+      user: req.user.username
+    }).then(function () {
+      res.send("You are marked as attending!");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })

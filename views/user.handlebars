@@ -21,7 +21,9 @@
           <p>When: {{this.time}}</p>
         </div>
         <div class="card-action">
-          <a href="#">Attend event</a>
+          <form action="/attend/event/{{this.id}}" method="post">
+            <button type="submit" class="btn">Attend event</button>
+          </form>
         </div>
       </div>
     </div>
