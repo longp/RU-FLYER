@@ -232,12 +232,14 @@ app.get("/events", function (req, res) {
     }).then(function (eventsCreated) {
       Attending.findAll({
       where:
-        {'user': "user123"}
+        {'user': req.user.username}
     }).then(function (results) {
+      console.log(results);
       var allIds = [];
       for (var i = results.length - 1; i >= 0; i--) {
-        allIds.push(results[i].id);
+        allIds.push(results[i].eventId);
       }
+      console.log("an array of ids should follow" + allIds);
       Event.findAll({
         where:
         {id: allIds}
@@ -302,7 +304,7 @@ app.post("/attend/event/:eId", function (req, res) {
       eventId: req.params.eId,
       user: req.user.username
     }).then(function () {
-      res.redirect("/events/?msg=You are not attending!");
+      res.redirect("/user/?msg=You are now attending!");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })
