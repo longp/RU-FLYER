@@ -145,13 +145,17 @@ app.get("/", function (req, res) {
 
 app.post('/register', function (req, res) {
   console.log(req.body);
-  user.create({
+  User.create({
     username: req.body.username,
     password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email
-  });
+  }).then(function () {
+    res.send("User Created");
+  }).catch(function(err) {
+    res.redirect("/?msg=" + err.message);
+  })
 });
 
 app.post('/login', passport.authenticate('local', {
