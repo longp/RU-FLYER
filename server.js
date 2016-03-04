@@ -234,12 +234,10 @@ app.get("/events", function (req, res) {
       where:
         {'user': req.user.username}
     }).then(function (results) {
-      console.log(results);
       var allIds = [];
       for (var i = results.length - 1; i >= 0; i--) {
         allIds.push(results[i].eventId);
       }
-      console.log("an array of ids should follow" + allIds);
       Event.findAll({
         where:
         {id: allIds}
