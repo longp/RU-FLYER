@@ -9,6 +9,22 @@
     </nav>
 
     <div class="row">
+      {{#each event}}
+      <div class="col s12 m6">
+        <div class="card teal lighten-2">
+          <div class="card-content white-text">
+            <span class="card-title">{{this.event}}</span>
+            <p>{{this.desc}}</p>
+            <p>Where: {{this.location}}</p>
+            <p>When: {{this.time}}</p>
+          </div>
+          <div class="card-action">
+            <a href="#">Attend event</a>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+
       <div class="col s12 m6">
         <div class="card teal lighten-2">
           <div class="card-content white-text">
@@ -28,7 +44,7 @@
     <div class="row">
       <div class="col m6">
         <h1>Create Event</h1>
-        <form action="/newEvent" method="post">
+        <form action="/newevent" method="post">
           <div>
             <label for="">Event Name</label>
             <input type="text" class="validate" id="" placeholder="My Event" name="event">

@@ -133,8 +133,47 @@ var User = connection.define('user', {
 });
 
 
+var Event = connection.define('event', {
+  event: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty:true,
+    }
+  },
+  time: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true
+    }
+  },
+  location: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true,
+    }
+  },
+  desc: {
+    type: Sequelize.BLOB,
+    allowNull: false,
+    validate : {
+      notEmpty: true,
+    }
+  },
+  creator: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true
+    }
+  }
+});
+
 // syncing tables
 User.sync();
+Event.sync();
 
 
 //routes
@@ -152,9 +191,15 @@ app.get("/", function (req, res) {
 
 app.get("/user", function (req, res) {
   if (req.user) {
-    res.render("user", {
-      username: req.user.username
-    });
+    Event.findAll({
+      limit: 10
+    }).then(function (results) {
+      console.log(results);
+      res.render("user", {
+        username: req.user.username,
+        event: results
+      });
+    })
   } else {
     res.render("home", {
       msg: "Please Log In"
@@ -170,7 +215,7 @@ app.post('/register', function (req, res) {
     lastName: req.body.lastName,
     email: req.body.email
   }).then(function () {
-    res.send("User Created");
+    res.redirect("/?msg=User Created Please Sign In");
   }).catch(function(err) {
     res.redirect("/?msg=" + err.message);
   })
@@ -183,7 +228,17 @@ app.post('/login', passport.authenticate('local', {
 
 app.post("/newevent", function (req, res) {
   if (req.user) {
-    // create event goes here
+    Event.create({
+      event: req.body.event,
+      time: req.body.time,
+      location: req.body.location,
+      desc: req.body.desc,
+      creator: req.user.username
+    }).then(function () {
+      res.send("Event Created");
+    }).catch(function(err) {
+      res.redirect("/?msg=" + err.message);
+    })
   } else {
     res.render("home", {
       msg: "Please Log In"
