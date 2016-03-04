@@ -145,7 +145,9 @@ app.get("/", function (req, res) {
     // Passport will create a req.user if the user is logged in
     res.redirect("/user");
   } else {
-    res.render("home");
+    res.render("home", {
+      msg: req.query.msg
+    });
   }
 });
 

@@ -25,6 +25,19 @@
     </div>
   </div>
 
+  {{#if msg}}
+    <div class="row">
+      <div class="col m12">
+        <div class="card red darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">Error</span>
+            <p>{{msg}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+
   <div class="row">
 
     <div class="col m6">
