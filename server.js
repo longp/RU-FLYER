@@ -210,14 +210,30 @@ app.get("/", function (req, res) {
 
 app.get("/user", function (req, res) {
   if (req.user) {
-    Event.findAll({
-      limit: 10
+    Attending.findAll({
+      where: {'user': req.user.username}
     }).then(function (results) {
-      res.render("user", {
-        username: req.user.username,
-        event: results
-      });
-    })
+      var allIds = [];
+      for (var i = results.length - 1; i >= 0; i--) {
+        allIds.push(results[i].eventId);
+      }
+      Event.findAll({
+        limit: 30,
+        where: {
+          creator: {
+            $notLike: req.user.username
+          },
+          id: {
+            $notIn: allIds
+          }
+        }
+      }).then(function (results) {
+        res.render("user", {
+          username: req.user.username,
+          event: results
+        });
+      })
+    });
   } else {
     res.render("home", {
       msg: "Please Log In"
