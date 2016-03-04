@@ -130,7 +130,33 @@ var User = connection.define('user', {
     }
   }
 });
+
+var Event = connection.define("event", {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      isAlphanumeric: true
+    }
+  },
+  location: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  time: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  description: {
+    type: Sequelize.BLOB
+  },
+  creator: {
+    type: Sequelize.INTEGER,
+    allowNull:false
+  }
+})
 // syncing table if none is created already
+Event.hasMany(User);
 User.sync();
 
 //routes for handlebars render
