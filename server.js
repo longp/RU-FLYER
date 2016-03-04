@@ -242,8 +242,6 @@ app.get("/events", function (req, res) {
         where:
         {id: allIds}
       }).then(function (eventsAtt) {
-          // console.log(eventsCreated);
-          // console.log(eventsAtt);
           res.render("events", {
             username: req.user.username,
             eventsCreated: eventsCreated,
@@ -304,7 +302,7 @@ app.post("/attend/event/:eId", function (req, res) {
       eventId: req.params.eId,
       user: req.user.username
     }).then(function () {
-      res.send("You are marked as attending!");
+      res.redirect("/events/?msg=You are not attending!");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })
