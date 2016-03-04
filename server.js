@@ -229,18 +229,18 @@ app.get("/events", function (req, res) {
   if (req.user) {
     Event.findAll({
       where: {creator: req.user.username},
-    }).then(function (results) {
-      if (results) {
+    }).then(function (eventsCreated) {
+      Attending.findAll({
+        where: {user: req.user.username}
+      }).then(function (eventsAtt) {
+        console.log(eventsCreated);
+        console.log(eventsAtt);
         res.render("events", {
           username: req.user.username,
-          event: results
+          eventsCreated: eventsCreated,
+          eventsAtt: eventsAtt
         });
-      } else {
-        res.render("events", {
-          username: req.user.username,
-          msg: "You haven't created any events"
-        });
-      }
+      })
     })
   } else {
     res.render("home", {
