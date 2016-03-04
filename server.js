@@ -213,10 +213,11 @@ app.get("/user", function (req, res) {
     Attending.findAll({
       where: {'user': req.user.username}
     }).then(function (results) {
-      var allIds = [];
+      var allIds = [0];
       for (var i = results.length - 1; i >= 0; i--) {
         allIds.push(results[i].eventId);
       }
+      console.log("all attendance ids for this user are: " + allIds);
       Event.findAll({
         limit: 30,
         where: {
