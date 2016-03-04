@@ -1,6 +1,3 @@
-// why was this added?
-// $('.carousel').carousel();
-
 //require JAWSDB_URL in env file
 require('dotenv').config();
 
@@ -16,8 +13,8 @@ var PORT = process.env.PORT || 3000;
 var app = express();
 
 
-
 // middleware setup
+
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({
   secret: 'keyboard cat rocks',
@@ -30,6 +27,7 @@ app.use(passport.session());
 
 
 //handlebars setup
+
 app.engine('handlebars', exphbs({
   defaultLayout: 'main'
 }));
@@ -37,12 +35,14 @@ app.set("view engine", 'handlebars');
 
 
 //static routes for js and css
+
 app.use("/js", express.static("public/js"));
 app.use("/css", express.static("public/css"));
 app.use("/pics", express.static("public/pics"));
 
 
 // passport auth strategy
+
 passport.use(new passportLocal(
   function(username, password, done) {
     User.findOne({
@@ -76,6 +76,7 @@ passport.deserializeUser(function(id, done) {
 
 
 //database setup
+
 var connection = new Sequelize(process.env.JAWSDB_URL);
 
 var User = connection.define('user', {
@@ -130,12 +131,17 @@ var User = connection.define('user', {
     }
   }
 });
-// syncing table if none is created already
+
+
+// syncing tables
 User.sync();
 
-//routes for handlebars render
+
+//routes
+
 app.get("/", function (req, res) {
   if (req.user) {
+    console.log(req.user);
     // Passport will create a req.user if the user is logged in
     res.redirect("/user");
   } else {
