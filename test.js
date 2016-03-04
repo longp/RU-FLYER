@@ -128,25 +128,21 @@ connection.sync()
 test();
 
 function test () {
-  // Attending.belongsToMany(Event, { through: 'worker_tasks', foreignKey: 'eventId' }).then(function (results) {
-  //   console.log(results);
-  // });
 
-  // models.Event.belongsTo(models.Attending, {
-  //       foreignKey: "eventId", as: "Friend"
-  //   });
-
-  Event.hasMany(Attending, {foreignKey: 'eventId'});
 
   Attending.findAll({
-    include: [{
-      model: Event,
-      as: 'events'
-    }],
     where:
-      {'user': "user123",
-      'events.id': "1"}
+      {'user': "user123"}
   }).then(function (results) {
-    console.log(results);
+    var allIds = [];
+    for (var i = results.length - 1; i >= 0; i--) {
+      allIds.push(results[i].id);
+    }
+    Event.findAll({
+      where:
+      {id: allIds}
+    }).then(function (results) {
+      console.log(results);
+    })
   });
 }

@@ -231,16 +231,26 @@ app.get("/events", function (req, res) {
       where: {creator: req.user.username},
     }).then(function (eventsCreated) {
       Attending.findAll({
-        where: {user: req.user.username}
+      where:
+        {'user': "user123"}
+    }).then(function (results) {
+      var allIds = [];
+      for (var i = results.length - 1; i >= 0; i--) {
+        allIds.push(results[i].id);
+      }
+      Event.findAll({
+        where:
+        {id: allIds}
       }).then(function (eventsAtt) {
-        console.log(eventsCreated);
-        console.log(eventsAtt);
-        res.render("events", {
-          username: req.user.username,
-          eventsCreated: eventsCreated,
-          eventsAtt: eventsAtt
-        });
-      })
+          // console.log(eventsCreated);
+          // console.log(eventsAtt);
+          res.render("events", {
+            username: req.user.username,
+            eventsCreated: eventsCreated,
+            eventsAtt: eventsAtt
+          });
+        })
+      });
     })
   } else {
     res.render("home", {

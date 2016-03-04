@@ -22,13 +22,15 @@
         </div>
       </div>
 
-      {{#if eventsAtt}}
-        <div class="card teal lighten-2">
-          <div class="card-content white-text">
-            <span class="card-title">{{this.eventId}}</span>
-{{!--             <p>{{this.desc}}</p>
-            <p>Where: {{this.location}}</p>
-            <p>When: {{this.time}}</p> --}}
+      {{#each eventsAtt}}
+        <div class="col m12">
+          <div class="card teal lighten-2">
+            <div class="card-content white-text">
+              <span class="card-title">{{this.event}}</span>
+              <p>{{this.desc}}</p>
+              <p>Where: {{this.location}}</p>
+              <p>When: {{this.time}}</p>
+            </div>
           </div>
         </div>
       {{else}}
@@ -38,7 +40,7 @@
             <p>You are not attending any events yet!</p>
           </div>
         </div>
-      {{/if}}
+      {{/each}}
 
 
     </div>
