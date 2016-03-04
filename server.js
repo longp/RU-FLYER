@@ -194,11 +194,34 @@ app.get("/user", function (req, res) {
     Event.findAll({
       limit: 10
     }).then(function (results) {
-      console.log(results);
       res.render("user", {
         username: req.user.username,
         event: results
       });
+    })
+  } else {
+    res.render("home", {
+      msg: "Please Log In"
+    });
+  }
+})
+
+app.get("/events", function (req, res) {
+  if (req.user) {
+    Event.findAll({
+      where: {creator: req.user.username},
+    }).then(function (results) {
+      if (results) {
+        res.render("events", {
+          username: req.user.username,
+          event: results
+        });
+      } else {
+        res.render("events", {
+          username: req.user.username,
+          msg: "You haven't created any events"
+        });
+      }
     })
   } else {
     res.render("home", {
