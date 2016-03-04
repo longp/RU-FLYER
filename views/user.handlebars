@@ -1,12 +1,58 @@
   <div class="container">
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo">{{username}}</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/events">Your Events</a></li>
+        </ul>
+      </div>
+    </nav>
+
     <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Panel title</h3>
-        </div>
-        <div class="panel-body">
-          Panel content
+      <div class="col s12 m6">
+        <div class="card teal lighten-2">
+          <div class="card-content white-text">
+            <span class="card-title">Party Event</span>
+            <p>I am a very simple card. I am good at containing small bits of information.
+            I am convenient because I require little markup to use effectively.</p><br>
+            <p>When: March 10 - 8:00PM</p>
+            <p>Where: My House!</p>
+          </div>
+          <div class="card-action">
+            <a href="#">Attend event</a>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col m6">
+        <h1>Create Event</h1>
+        <form action="/newEvent" method="post">
+          <div>
+            <label for="">Event Name</label>
+            <input type="text" class="validate" id="" placeholder="My Event" name="event">
+          </div>
+          <br>
+          <div>
+            <label for="">When?</label>
+            <input type="date" class="validate" id="" name="date">
+            <input type="time" class="validate" id="" placeholder="John" name="time">
+          </div>
+          <br>
+          <div>
+            <label for="">Where?</label>
+            <input type="text" class="validate" id="" placeholder="Venue" name="location">
+          </div>
+          <br>
+          <div>
+            <label for="">Description</label>
+            <textarea name="desc" class="materialize-textarea"></textarea>
+          </div>
+          <br>
+          <button type="submit" class="btn">Create!</button>
+        </form>
+      </div>
+    </div>
+
   </div>

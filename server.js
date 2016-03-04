@@ -141,7 +141,6 @@ User.sync();
 
 app.get("/", function (req, res) {
   if (req.user) {
-    console.log(req.user);
     // Passport will create a req.user if the user is logged in
     res.redirect("/user");
   } else {
@@ -151,8 +150,19 @@ app.get("/", function (req, res) {
   }
 });
 
+app.get("/user", function (req, res) {
+  if (req.user) {
+    res.render("user", {
+      username: req.user.username
+    });
+  } else {
+    res.render("home", {
+      msg: "Please Log In"
+    });
+  }
+})
+
 app.post('/register', function (req, res) {
-  console.log(req.body);
   User.create({
     username: req.body.username,
     password: req.body.password,
@@ -171,6 +181,16 @@ app.post('/login', passport.authenticate('local', {
   failureRedirect: '/?msg=Login Credentials do not work'
 }));
 
+app.post("/newevent", function (req, res) {
+  if (req.user) {
+    // create event goes here
+  } else {
+    res.render("home", {
+      msg: "Please Log In"
+    });
+  }
+})
+
 
 // database connection via sequelize + port listening
 connection.sync().then(function() {
@@ -178,4 +198,3 @@ connection.sync().then(function() {
       console.log("Listening on:" + PORT)
   });
 });
-
