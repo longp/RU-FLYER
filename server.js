@@ -145,7 +145,7 @@ app.get("/", function (req, res) {
 
 app.post('/register', function (req, res) {
   console.log(req.body);
-  user.create({
+  User.create({
     username: req.body.username,
     password: req.body.password,
     firstName: req.body.firstName,
