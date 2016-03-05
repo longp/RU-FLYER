@@ -132,9 +132,10 @@ var schedule = require('node-schedule');
 var transporter = nodemailer.createTransport('smtps://' + sender.email + '%40' + sender.host + ':' + sender.pass + '@smtp.' + sender.host);
 
 // scheduler
-// var j = schedule.scheduleJob('42 * * * * *', function(){
-//   console.log('The answer to life, the universe, and everything!');
-// });
+var job = schedule.scheduleJob('40 * * * *', function(){
+  // Cron date will fire email blast at specified date and time
+  runEventChecks();
+});
 
 function runEventChecks () {
   var recipients = [];
@@ -143,37 +144,36 @@ function runEventChecks () {
   var year = date.getFullYear();
   var month = date.getMonth();
   var day = date.getDate();
-  var fullDate = year + "-" + padDate(month + 1) + "-" + padDate(day + 1);
+  var fullDate = year + "-" + padDate(month + 1) + "-" + padDate(day);
   //This^^^^^is really tomorrows date to test for a event coming up
-  console.log(fullDate);
+  var event;
 
   Event.findAll({
   }).then(function(allEvents) {
     for (var i = allEvents.length - 1; i >= 0; i--) {
-      console.log(allEvents[i].date);
-      console.log(allEvents[i].id);
       if (allEvents[i].date === fullDate) {
+        event = allEvents[i].dataValues;
         Attending.findAll({
           where: {eventId: allEvents[i].id}
         }).then(function (attendingUsers) {
-          console.log("attending users:" + attendingUsers);
-          for (var i = attendingUsers.length - 1; i >= 0; i--) {
-            recipients.push(attendingUsers[i].username);
+          for (var j = attendingUsers.length - 1; j >= 0; j--) {
+            recipients.push(attendingUsers[j].user);
           }
-          console.log("resipients: " + recipients);
           User.findAll({
             where: {username: recipients}
           }).then(function (results) {
-            console.log(results);
-            // console.log(results[0].email);
+            for (var k = results.length - 1; k >= 0; k--) {
+              recipientsEmails.push(results[k].email);
+            }
+            sendEmail(recipientsEmails, event);
+            // console.log("Sending email to: " + recipientsEmails);
+            // console.log("Event info is: " + event);
           })
         })
       }
     }
   })
 }
-
-runEventChecks();
 
 function padDate (num) {
   if (num < 10) {
@@ -189,7 +189,7 @@ function sendEmail (receivers, eventInfo) {
     to: receivers, // list of receivers
     subject: 'Upcoming Event!', // Subject line
     generateTextFromHTML: true, // Auto gen text field from html yay
-    html: '<b>' + eventInfo + '</b>' // html body
+    html: '<b><h1>' + eventInfo.event + '</h1><br>Where: ' + eventInfo.location + '<br>When: ' + eventInfo.time + ' ' + eventInfo.date + '<br>' + eventInfo.desc + '</b>' // html body
   };
 
   // send mail with defined transport object
@@ -197,6 +197,10 @@ function sendEmail (receivers, eventInfo) {
     if(error){
         return console.log(error);
     }
-    console.log('Message sent: ' + info.response);
+    console.log('Message sent to: ' + mailOptions.to);
   });
+
+  recipients = [];
+  recipientsEmails = [];
+  event = null;
 }
