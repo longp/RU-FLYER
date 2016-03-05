@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-var sender = require("./secret.js");
+var sender = require("./keys/secret.js");
 
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport('smtps://' + sender.email + '%40' + sender.host + ':' + sender.pass + '@smtp.' + sender.host);
