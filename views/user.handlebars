@@ -1,0 +1,33 @@
+<div class="container">
+
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">{{username}}</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/user" class="active">Dashboard</a></li>
+        <li><a href="/events">Your Events</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="row">
+    {{#each event}}
+    <div class="col s12 m6">
+      <div class="card teal lighten-2">
+        <div class="card-content white-text">
+          <span class="card-title">{{this.event}}</span>
+          <p>{{this.desc}}</p>
+          <p>Where: {{this.location}}</p>
+          <p>When: {{this.time}} on {{this.date}}</p>
+        </div>
+        <div class="card-action">
+          <form action="/attend/event/{{this.id}}" method="post">
+            <button type="submit" class="btn">Attend event</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+
+</div>
