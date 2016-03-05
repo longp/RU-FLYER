@@ -251,6 +251,38 @@ app.get("/user", function (req, res) {
   }
 })
 
+app.get("/attending", function (req, res) {
+  if (req.user) {
+    Event.findAll({
+      where: {creator: req.user.username},
+    }).then(function (eventsCreated) {
+      Attending.findAll({
+      where:
+        {'user': req.user.username}
+    }).then(function (results) {
+      var allIds = [];
+      for (var i = results.length - 1; i >= 0; i--) {
+        allIds.push(results[i].eventId);
+      }
+      Event.findAll({
+        where:
+        {id: allIds}
+      }).then(function (eventsAtt) {
+          res.render("attending", {
+            username: req.user.username,
+            eventsCreated: eventsCreated,
+            eventsAtt: eventsAtt
+          });
+        })
+      });
+    })
+  } else {
+    res.render("home", {
+      msg: "Please Log In"
+    });
+  }
+});
+
 app.get("/events", function (req, res) {
   if (req.user) {
     Event.findAll({
@@ -299,7 +331,7 @@ app.delete("/delete", function (req, res) {
       eventId: req.body.id
     }
   }).then(function () {
-    res.redirect("/events");
+    res.redirect("/attending");
   });
 })
 
@@ -332,7 +364,7 @@ app.post("/newevent", function (req, res) {
       desc: req.body.desc,
       creator: req.user.username
     }).then(function () {
-      res.redirect("/events/?msg=You created a new event");
+      res.redirect("/events");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })
@@ -349,7 +381,7 @@ app.post("/attend/event/:eId", function (req, res) {
       eventId: req.params.eId,
       user: req.user.username
     }).then(function () {
-      res.redirect("/user/?msg=You are now attending!");
+      res.redirect("/user");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })
