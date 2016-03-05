@@ -1,9 +1,6 @@
-//require JAWSDB_URL in env file
-require('dotenv').config();
 
 var express = require("express");
 var exphbs = require("express-handlebars");
-var Sequelize = require("sequelize");
 var bodyParser = require("body-parser");
 var session = require('express-session');
 var bcrypt = require("bcryptjs");
@@ -11,10 +8,15 @@ var passport = require('passport');
 var passportLocal = require('passport-local').Strategy;
 var PORT = process.env.PORT || 3000;
 var app = express();
+var User = require('./models/models.js');
+var Event = require('./models/models.js');
+var Attending = require('./models/models.js');
+var Sequelize = require("sequelize");
+require('dotenv').config();
+var connection = new Sequelize(process.env.JAWSDB_URL);
 
 
 // middleware setup
-
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({
   secret: 'keyboard cat rocks',
@@ -27,7 +29,6 @@ app.use(passport.session());
 
 
 //handlebars setup
-
 app.engine('handlebars', exphbs({
   defaultLayout: 'main'
 }));
@@ -35,14 +36,12 @@ app.set("view engine", 'handlebars');
 
 
 //static routes for js and css
-
 app.use("/js", express.static("public/js"));
 app.use("/css", express.static("public/css"));
 app.use("/pics", express.static("public/pics"));
 
 
 // passport auth strategy
-
 passport.use(new passportLocal(
   function(username, password, done) {
     User.findOne({
@@ -74,130 +73,7 @@ passport.deserializeUser(function(id, done) {
     done(null, { id: id, username: id })
 });
 
-
-//database setup
-
-var connection = new Sequelize(process.env.JAWSDB_URL);
-
-var User = connection.define('user', {
-  username: {
-    type: Sequelize.STRING,
-    unique: true,
-    allowNull: false,
-    validate : {
-      notEmpty:true,
-      isAlphanumeric: true
-    }
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-      len: {
-        args:[8, 20],
-        msg: "Password must be 8-20 characters long"
-      }
-    }
-  },
-  firstName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-      is: ["^[a-z]+$", 'i']
-    }
-  },
-  lastName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-      is: ["^[a-z]+$", 'i']
-    }
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      isEmail: true
-    }
-  }
-},
-  {
-  hooks: {
-    beforeCreate: function(input){
-      input.password = bcrypt.hashSync(input.password, 10);
-    }
-  }
-});
-
-
-var Event = connection.define('event', {
-  event: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty:true,
-    }
-  },
-  date: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  },
-  time: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  },
-  location: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-    }
-  },
-  desc: {
-    type: Sequelize.BLOB,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-    }
-  },
-  creator: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  }
-});
-
-
-var Attending = connection.define('attendance', {
-  eventId: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty:true,
-    }
-  },
-  user: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  }
-});
-
 // syncing tables
-
 User.sync();
 Event.sync();
 Attending.sync();
