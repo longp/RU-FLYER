@@ -5,6 +5,7 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="/user">Dashboard</a></li>
         <li><a href="/events" class="active">Your Events</a></li>
+        <li><a href="/attending">Attending</a></li>
       </ul>
     </div>
   </nav>
@@ -13,46 +14,10 @@
 
   <div class="row">
 
-    <div class="col m6">
-
+    <div class="col m12">
       <div class="card blue-grey darken-1">
         <div class="card-content white-text">
-          <span class="card-title">Events Attending</span>
-        </div>
-      </div>
-
-      {{#each eventsAtt}}
-        <div class="col m12">
-          <div class="card light-blue darken-1">
-            <div class="card-content white-text">
-              <span class="card-title">{{this.event}}</span>
-              <p>{{this.desc}}</p>
-              <p>Where: {{this.location}}</p>
-              <p>When: {{this.time}} on {{this.date}}</p>
-              <br>
-              <form method="post" action="/delete?_method=DELETE">
-                <input type="hidden" name="id" value="{{this.id}}">
-                <button class="btn red" type="submit">delete</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      {{else}}
-        <div class="card red darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">Hello!</span>
-            <p>You are not attending any events yet!</p>
-          </div>
-        </div>
-      {{/each}}
-
-
-    </div>
-
-    <div class="col m6">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">Your Events</span>
+          <span class="card-title">Your Events</span> 
           <a id="createFormBtn" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
         </div>
       </div>
@@ -73,7 +38,7 @@
           <br>
           <div id="whereDiv">
             <label for="">Where?</label>
-            <button id="btn-map" >google</button>
+            <button id="btn-map" class="btn orange" >google Maps</button>
             <input type="text" id="locationInput" name="location" placeholder="location">
 
           </div>

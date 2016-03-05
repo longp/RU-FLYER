@@ -1,3 +1,4 @@
+// onclick  wto pop up google maps
 $("#btn-map").on('click', function (e) {
   if(true) {
     $.when(function () {
@@ -7,7 +8,7 @@ $("#btn-map").on('click', function (e) {
     }).then(hideBtn)
   }
 })
-
+// function that appends input and map and initializes googlemap fx
 function deployMap () {
   var mapInput = $('<input>').attr({
     id: "pac-input",
@@ -26,7 +27,7 @@ function deployMap () {
   $('#whereDiv').append(mapDiv);
   initAutocomplete();
 }
-
+//hides btn and input after clicking
 function hideBtn () {
   $('#btn-map').remove();
   $('#locationInput').remove();

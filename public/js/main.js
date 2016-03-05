@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
   $("#createFormBtn").on("click", function () {
     $('#createForm').toggle(function () {
@@ -6,4 +8,5 @@ $(document).ready(function () {
       $("#createForm").addClass("hidden");
     });
   })
+  $("body").addClass("bg")
 });
