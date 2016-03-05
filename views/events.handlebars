@@ -1,5 +1,4 @@
 <div class="container">
-
   <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo">{{username}}</a>
@@ -51,7 +50,6 @@
     </div>
 
     <div class="col m6">
-
       <div class="card blue-grey darken-1">
         <div class="card-content white-text">
           <span class="card-title">Your Events</span>
@@ -73,9 +71,11 @@
             <input type="time" class="validate" id="" placeholder="John" name="time">
           </div>
           <br>
-          <div>
+          <div id="whereDiv">
             <label for="">Where?</label>
-            <input type="text" class="validate" id="" placeholder="Venue" name="location">
+            <button id="btn-map" >google</button>
+            <input type="text" id="locationInput" name="location" placeholder="location">
+
           </div>
           <br>
           <div>
@@ -112,3 +112,6 @@
   </div>
 
 </div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ0nHlvI6vUNThtWCS54hoQ3KUJZxbMA0&libraries=places"></script>
+<script type="text/javascript" src="/js/events.js"></script>
