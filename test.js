@@ -1,148 +1,23 @@
-var Sequelize = require("sequelize");
+var nodemailer = require('nodemailer');
+var sender = require("./secret.js");
 
-require('dotenv').config();
+// create reusable transporter object using the default SMTP transport
+var transporter = nodemailer.createTransport('smtps://' + sender.email + '%40' + sender.host + ':' + sender.pass + '@smtp.' + sender.host);
 
-//database setup
 
-var connection = new Sequelize(process.env.JAWSDB_URL);
+// setup e-mail data with unicode symbols
+var mailOptions = {
+    from: '"RU Flyer 👥" <climbershub@gmail.com>', // sender address
+    to: 'alexg2195@gmail.com', // list of receivers
+    subject: 'Hello ✔', // Subject line
+    text: 'Hello world', // plaintext body
+    html: '<b>Hello world</b>' // html body
+};
 
-var User = connection.define('user', {
-  username: {
-    type: Sequelize.STRING,
-    unique: true,
-    allowNull: false,
-    validate : {
-      notEmpty:true,
-      isAlphanumeric: true
+// send mail with defined transport object
+transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        return console.log(error);
     }
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-      len: {
-        args:[8, 20],
-        msg: "Password must be 8-20 characters long"
-      }
-    }
-  },
-  firstName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-      is: ["^[a-z]+$", 'i']
-    }
-  },
-  lastName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-      is: ["^[a-z]+$", 'i']
-    }
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      isEmail: true
-    }
-  }
-},
-  {
-  hooks: {
-    beforeCreate: function(input){
-      input.password = bcrypt.hashSync(input.password, 10);
-    }
-  }
+    console.log('Message sent: ' + info.response);
 });
-
-
-var Event = connection.define('event', {
-  event: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty:true,
-    }
-  },
-  time: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  },
-  location: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-    }
-  },
-  desc: {
-    type: Sequelize.BLOB,
-    allowNull: false,
-    validate : {
-      notEmpty: true,
-    }
-  },
-  creator: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  }
-});
-
-
-var Attending = connection.define('attendance', {
-  eventId: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty:true,
-    }
-  },
-  user: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate : {
-      notEmpty: true
-    }
-  }
-});
-
-// syncing tables
-User.sync();
-Event.sync();
-Attending.sync();
-
-connection.sync()
-
-// run tests below
-
-test();
-
-function test () {
-
-
-  Attending.findAll({
-    where:
-      {'user': "user123"}
-  }).then(function (results) {
-    var allIds = [];
-    for (var i = results.length - 1; i >= 0; i--) {
-      allIds.push(results[i].id);
-    }
-    Event.findAll({
-      where:
-      {id: allIds}
-    }).then(function (results) {
-      console.log(results);
-    })
-  });
-}

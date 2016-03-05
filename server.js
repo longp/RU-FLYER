@@ -141,6 +141,13 @@ var Event = connection.define('event', {
       notEmpty:true,
     }
   },
+  date: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true
+    }
+  },
   time: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -298,6 +305,7 @@ app.post("/newevent", function (req, res) {
     Event.create({
       event: req.body.event,
       time: req.body.time,
+      date: req.body.date,
       location: req.body.location,
       desc: req.body.desc,
       creator: req.user.username
