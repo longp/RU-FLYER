@@ -30,6 +30,11 @@
               <p>{{this.desc}}</p>
               <p>Where: {{this.location}}</p>
               <p>When: {{this.time}} on {{this.date}}</p>
+              <br>
+              <form method="post" action="/delete?_method=DELETE">
+                <input type="hidden" name="id" value="{{this.id}}">
+                <button class="btn red" type="submit">delete</button>
+              </form>
             </div>
           </div>
         </div>

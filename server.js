@@ -7,6 +7,7 @@ var Sequelize = require("sequelize");
 var bodyParser = require("body-parser");
 var session = require('express-session');
 var bcrypt = require("bcryptjs");
+var methodOverride = require("method-override");
 var passport = require('passport');
 var passportLocal = require('passport-local').Strategy;
 var PORT = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ var app = express();
 // middleware setup
 
 app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
 app.use(require('express-session')({
   secret: 'keyboard cat rocks',
   resave: true,
@@ -279,6 +281,17 @@ app.get("/events", function (req, res) {
       msg: "Please Log In"
     });
   }
+})
+
+app.delete("/delete", function (req, res) {
+  console.log(req.body);
+  Attending.destroy({
+    where: {
+      eventId: req.body.id
+    }
+  }).then(function () {
+    res.redirect("/events")
+  })
 })
 
 app.post('/register', function (req, res) {
