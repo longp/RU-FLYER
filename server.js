@@ -184,7 +184,7 @@ app.post("/newevent", function (req, res) {
       time: req.body.time,
       date: req.body.date,
       location: req.body.location,
-      desc: req.body.desc,
+      description: req.body.desc,
       creator: req.user.username
     }).then(function () {
       res.redirect("/events/?msg=You created a new event");
@@ -201,7 +201,7 @@ app.post("/newevent", function (req, res) {
 app.post("/attend/event/:eId", function (req, res) {
   if (req.user) {
     Attending.create({
-      eventId: req.params.eId,
+      eventId: req.params.eventId,
       user: req.user.username
     }).then(function () {
       res.redirect("/user/?msg=You are now attending!");
