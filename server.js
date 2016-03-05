@@ -141,6 +141,13 @@ var Event = connection.define('event', {
       notEmpty:true,
     }
   },
+  date: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate : {
+      notEmpty: true
+    }
+  },
   time: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -210,14 +217,31 @@ app.get("/", function (req, res) {
 
 app.get("/user", function (req, res) {
   if (req.user) {
-    Event.findAll({
-      limit: 10
+    Attending.findAll({
+      where: {'user': req.user.username}
     }).then(function (results) {
-      res.render("user", {
-        username: req.user.username,
-        event: results
-      });
-    })
+      var allIds = [0];
+      for (var i = results.length - 1; i >= 0; i--) {
+        allIds.push(results[i].eventId);
+      }
+      console.log("all attendance ids for this user are: " + allIds);
+      Event.findAll({
+        limit: 30,
+        where: {
+          creator: {
+            $notLike: req.user.username
+          },
+          id: {
+            $notIn: allIds
+          }
+        }
+      }).then(function (results) {
+        res.render("user", {
+          username: req.user.username,
+          event: results
+        });
+      })
+    });
   } else {
     res.render("home", {
       msg: "Please Log In"
@@ -281,6 +305,7 @@ app.post("/newevent", function (req, res) {
     Event.create({
       event: req.body.event,
       time: req.body.time,
+      date: req.body.date,
       location: req.body.location,
       desc: req.body.desc,
       creator: req.user.username
