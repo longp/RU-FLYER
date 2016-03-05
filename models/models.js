@@ -106,7 +106,7 @@ var Event = connection.define('event', {
 
 var Attending = connection.define('attendance', {
   eventId: {
-    type: Sequelize.STRING,
+    type: Sequelize.INTEGER,
     allowNull: false,
     validate : {
       notEmpty:true,
