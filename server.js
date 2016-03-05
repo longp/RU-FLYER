@@ -283,6 +283,15 @@ app.get("/events", function (req, res) {
   }
 })
 
+app.delete("/remove", function (req, res) {
+  console.log(req.body);
+  Event.destroy({
+    where: {id: req.body.id}
+  }).then(function () {
+    res.redirect('/events');
+  })
+})
+
 app.delete("/delete", function (req, res) {
   console.log(req.body);
   Attending.destroy({
@@ -290,8 +299,8 @@ app.delete("/delete", function (req, res) {
       eventId: req.body.id
     }
   }).then(function () {
-    res.redirect("/events")
-  })
+    res.redirect("/events");
+  });
 })
 
 app.post('/register', function (req, res) {

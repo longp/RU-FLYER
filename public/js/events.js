@@ -6,7 +6,6 @@ $("#btn-map").on('click', function (e) {
       e.preventDefault();
     }).then(hideBtn)
   }
-
 })
 
 function deployMap () {
