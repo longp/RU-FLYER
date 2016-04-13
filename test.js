@@ -132,7 +132,7 @@ var schedule = require('node-schedule');
 var transporter = nodemailer.createTransport('smtps://' + sender.email + '%40' + sender.host + ':' + sender.pass + '@smtp.' + sender.host);
 
 // scheduler
-var job = schedule.scheduleJob('40 * * * *', function(){
+var job = schedule.scheduleJob('20 * * * *', function(){
   // Cron date will fire email blast at specified date and time
   runEventChecks();
 });
