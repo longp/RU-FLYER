@@ -4,12 +4,12 @@
 
 ##Technology Used
 
-Express
-Handlebars
-MySQL
-Sequelize
-Materialize
-Passport (Auth)
+* Express
+* Handlebars
+* MySQL
+* Sequelize
+* Materialize
+* Passport (Auth)
 
 ##Objective
 
