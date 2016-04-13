@@ -7,6 +7,7 @@ var Sequelize = require("sequelize");
 var bodyParser = require("body-parser");
 var session = require('express-session');
 var bcrypt = require("bcryptjs");
+var methodOverride = require("method-override");
 var passport = require('passport');
 var passportLocal = require('passport-local').Strategy;
 var PORT = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ var app = express();
 // middleware setup
 
 app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
 app.use(require('express-session')({
   secret: 'keyboard cat rocks',
   resave: true,
@@ -249,6 +251,38 @@ app.get("/user", function (req, res) {
   }
 })
 
+app.get("/attending", function (req, res) {
+  if (req.user) {
+    Event.findAll({
+      where: {creator: req.user.username},
+    }).then(function (eventsCreated) {
+      Attending.findAll({
+      where:
+        {'user': req.user.username}
+    }).then(function (results) {
+      var allIds = [];
+      for (var i = results.length - 1; i >= 0; i--) {
+        allIds.push(results[i].eventId);
+      }
+      Event.findAll({
+        where:
+        {id: allIds}
+      }).then(function (eventsAtt) {
+          res.render("attending", {
+            username: req.user.username,
+            eventsCreated: eventsCreated,
+            eventsAtt: eventsAtt
+          });
+        })
+      });
+    })
+  } else {
+    res.render("home", {
+      msg: "Please Log In"
+    });
+  }
+});
+
 app.get("/events", function (req, res) {
   if (req.user) {
     Event.findAll({
@@ -281,6 +315,26 @@ app.get("/events", function (req, res) {
   }
 })
 
+app.delete("/remove", function (req, res) {
+  console.log(req.body);
+  Event.destroy({
+    where: {id: req.body.id}
+  }).then(function () {
+    res.redirect('/events');
+  })
+})
+
+app.delete("/delete", function (req, res) {
+  console.log(req.body);
+  Attending.destroy({
+    where: {
+      eventId: req.body.id
+    }
+  }).then(function () {
+    res.redirect("/attending");
+  });
+})
+
 app.post('/register', function (req, res) {
   User.create({
     username: req.body.username,
@@ -310,7 +364,7 @@ app.post("/newevent", function (req, res) {
       desc: req.body.desc,
       creator: req.user.username
     }).then(function () {
-      res.redirect("/events/?msg=You created a new event");
+      res.redirect("/events");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })
@@ -327,7 +381,7 @@ app.post("/attend/event/:eId", function (req, res) {
       eventId: req.params.eId,
       user: req.user.username
     }).then(function () {
-      res.redirect("/user/?msg=You are now attending!");
+      res.redirect("/user");
     }).catch(function(err) {
       res.redirect("/?msg=" + err.message);
     })
